@@ -1,0 +1,39 @@
+﻿@model List<BoxOffice.Models.TrendingMovie>
+
+@{
+    ViewBag.Title = "Trending Movies";
+}
+<h2 class="text-center" style="margin: 10px;">Trending Today</h2>
+    <div class="row">
+       
+        @foreach (var movie in Model)
+        {
+
+
+        <div class="card bg-dark col-md-3" style="width: 18rem; padding: 10px;">
+           
+            <div>
+                @if (movie.VoteAverage >= 7)
+                {
+                <span class="badge badge-success vote-average text-center" style="position: absolute; top: 10px; right: 10px;">@movie.VoteAverage.ToString("0.0")⭐</span>
+                }
+                @if (movie.VoteAverage <= 7 && movie.VoteAverage >= 5)
+                {
+            <span class="badge badge-secondary vote-average" style="position: absolute; top: 10px; right: 10px;">@movie.VoteAverage.ToString("0.0")⭐</span>
+                }
+            </div>
+           
+            @if (!string.IsNullOrEmpty(movie.PosterPath))
+            {
+                <img class="card-img-top" src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="@movie.Title" />
+            }
+            else
+            {
+                <span>No Poster aviable</span>
+            }
+        <div class="card-body">
+            <h3 class="card-text text-center">@movie.Title</h3>
+         </div>
+        </div>
+        }
+        </div>
