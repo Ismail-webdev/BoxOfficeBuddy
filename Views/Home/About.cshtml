@@ -2,7 +2,25 @@
 @{
     ViewBag.Title = "Top Rated Movie";
 }
+<style>
+    .hidden-overview {
+        display: none;
+        background-color: rgba(0, 0, 0, 0.9);
+        color: white;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 10px;
+        overflow-y: auto;
+        text-align: center;
+    }
 
+    .card:hover .hidden-overview {
+        display: block;
+    }
+</style>
 
 <h2 class="text-center" style="margin: 10px;">Top-Rated Movies</h2>
 <div class="row">
@@ -29,10 +47,9 @@
         }
         <div class="card-body">
             <h4 class="card-text">@toprated.Title</h4>
-            <p class="card-text">@toprated.ReleaseDate.ToShortDateString()</p>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                Look Overview
-            </button>
+        </div>
+        <div class="hidden-overview">
+            <p>@toprated.Overview</p>
         </div>
     </div>
     }

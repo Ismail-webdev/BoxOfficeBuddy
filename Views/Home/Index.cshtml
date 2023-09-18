@@ -3,26 +3,45 @@
 @{
     ViewBag.Title = "Trending Movies";
 }
+<style>
+    .hidden-overview {
+        display: none; 
+        background-color: rgba(0, 0, 0, 1.0);
+        color: white;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 10px;
+        overflow-y: auto;
+    }
+    .card:hover .hidden-overview {
+        display: flex;
+        align-items: center;
+    }
+</style>
+
 <h2 class="text-center" style="margin: 10px;">Trending Today</h2>
-    <div class="row">
-       
-        @foreach (var movie in Model)
-        {
+<div class="row justify-content-around">
+
+    @foreach (var movie in Model)
+    {
 
 
-        <div class="card bg-dark col-md-3" style="width: 18rem; padding: 10px;">
-           
+        <div class="card bg-dark col-md-3" style="width: 18rem; padding: 10px; margin-block: 1px;">
+            <div>
             <div>
                 @if (movie.VoteAverage >= 7)
                 {
-                <span class="badge badge-success vote-average text-center" style="position: absolute; top: 10px; right: 10px;">@movie.VoteAverage.ToString("0.0")⭐</span>
+                    <span class="badge badge-success vote-average text-center" style="position: absolute; top: 10px; right: 10px;">@movie.VoteAverage.ToString("0.0")⭐</span>
                 }
                 @if (movie.VoteAverage <= 7 && movie.VoteAverage >= 5)
                 {
-            <span class="badge badge-secondary vote-average" style="position: absolute; top: 10px; right: 10px;">@movie.VoteAverage.ToString("0.0")⭐</span>
+                    <span class="badge badge-secondary vote-average" style="position: absolute; top: 10px; right: 10px;">@movie.VoteAverage.ToString("0.0")⭐</span>
                 }
             </div>
-           
+
             @if (!string.IsNullOrEmpty(movie.PosterPath))
             {
                 <img class="card-img-top" src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="@movie.Title" />
@@ -31,9 +50,12 @@
             {
                 <span>No Poster aviable</span>
             }
-        <div class="card-body">
-            <h3 class="card-text text-center">@movie.Title</h3>
-         </div>
+            <div class="card-body">
+                <h3 class="card-text text-center">@movie.Title</h3>
+            </div>
+            <div class="hidden-overview">
+                <p>@movie.Overview</p>
+            </div>
         </div>
-        }
-        </div>
+</div>      }
+</div>
