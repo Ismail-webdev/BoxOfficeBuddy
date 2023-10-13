@@ -1,0 +1,21 @@
+﻿*{
+    box-sizing:border-box;
+    margin: 0px;
+    padding:0px;
+}
+.card-text {
+    font-size: 1.3vw;
+}
+.modal-content {
+    width:750px;
+}
+#multi-item-carousel .cast {
+    border: none;
+}
+.modal-overview {
+    margin-block: 10px;
+    padding: 10px;
+    font-size: 1vw;
+    border: 1px solid black;
+    border-radius: 10px;
+}

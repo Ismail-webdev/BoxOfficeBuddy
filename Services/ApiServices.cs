@@ -1,6 +1,7 @@
 ﻿using System;
 using RestSharp;
 using System.Collections.Generic;
+using BoxOffice.Models;
 
 namespace BoxOffice.Services
 {
@@ -26,10 +27,23 @@ namespace BoxOffice.Services
             }
             return new List<BoxOffice.Models.Movie>();
         }
+        public List<CastMember> GetMovieCast(int movieId)
+        {
+            var client = new RestClient(BaseUrl);
+            var request = new RestRequest($"movie/{movieId}/credits?api_key={_apikey}", Method.GET);
+            var response = client.Execute<MovieCreditsResponse>(request);
+
+            if (response.IsSuccessful)
+            {
+                return response.Data.Cast;
+            }
+            return new List<CastMember>();
+        }
+
         public List<BoxOffice.Models.TrendingMovie> GetTrendingMovies()
         {
             var client = new RestClient(BaseUrl);
-            var request = new RestRequest($"trending/movie/week?api_key={_apikey}", Method.GET);
+            var request = new RestRequest($"trending/all/week?api_key={_apikey}", Method.GET);
             var response = client.Execute<MovieTrendingResponse>(request);
 
             if (response.IsSuccessful)
@@ -38,6 +52,10 @@ namespace BoxOffice.Services
             }
             return new List<BoxOffice.Models.TrendingMovie>();
         }
+    }
+    public class MovieCreditsResponse
+    {
+        public List<CastMember> Cast { get; set; }
     }
     public class MovieResponse
     {
