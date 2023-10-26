@@ -1,21 +1,21 @@
-﻿*{
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+*{
     box-sizing:border-box;
     margin: 0px;
     padding:0px;
 }
+body {
+    font-family: 'Montserrat', sans-serif;
+}
 .card-text {
     font-size: 1.3vw;
 }
-.modal-content {
-    width:750px;
-}
 #multi-item-carousel .cast {
+    object-fit: contain;
     border: none;
 }
-.modal-overview {
-    margin-block: 10px;
-    padding: 10px;
-    font-size: 1vw;
-    border: 1px solid black;
-    border-radius: 10px;
+.cast{
+    margin: 5px;
+    border: none;
 }
+

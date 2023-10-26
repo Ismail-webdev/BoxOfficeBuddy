@@ -1,10 +1,118 @@
-﻿@model List<BoxOffice.Models.Movie>
-@{
-    ViewBag.Title = "Search Movie";
+﻿@{
+    ViewBag.Title = "Movie Search";
 }
+<head>
+    <link href="~/Content/CSS/index.css" rel="stylesheet" />
+</head>
 <h2>Movie Search</h2>
 
-<form action="@Url.Action("Search", "Movies")" method="get">
-    <input type="text" name="query" placeholder="Search movies" />
-    <button type="submit">Search</button>
-</form>
+@using (Html.BeginForm("Search", "Home", FormMethod.Post))
+{
+    <p>
+        <label>
+            @Html.RadioButton("searchType", "movie", true) Movie
+        </label>
+        <label>
+            @Html.RadioButton("searchType", "tv") TV Series
+        </label>
+    </p>
+    <p>
+        @Html.TextBox("searchTerm")
+        <input type="submit" value="Search" />
+    </p>
+}
+
+@if (ViewBag.SearchResults != null)
+{
+    <div class="card-columns">
+        @foreach (var movie in ViewBag.SearchResults)
+        {
+            <div class="card bg-dark" style="width: 16rem; padding:10px; margin: 9px;" type="button" data-toggle="modal" data-target="#movieModal-@movie.Id">
+                <div>
+                    @if (movie.VoteAverage >= 7)
+                    {
+                        <span class="badge badge-success vote-average text-center" style="position: absolute; top: 10px; right: 10px;">@movie.VoteAverage.ToString("0.0")⭐</span>
+                    }
+                    @if (movie.VoteAverage <= 7 && movie.VoteAverage >= 5)
+                    {
+                        <span class="badge badge-secondary vote-average" style="position: absolute; top: 10px; right: 10px;">@movie.VoteAverage.ToString("0.0")⭐</span>
+                    }
+                </div>
+                @if (!string.IsNullOrEmpty(movie.poster_path))
+                {
+                    <img class="card-img-top" src="https://image.tmdb.org/t/p/original/@movie.poster_path" alt="@if (@movie.media_type == "movie")
+                {
+                                        @movie.Title
+                }
+                else if (@movie.media_type == "tv")
+                {
+                                        @movie.name
+                }" />
+                }
+                else
+                {
+                    <span>No Poster aviable</span>
+                }
+                <div class="card-body">
+                    <h5 class="card-title">
+                    @if (movie.media_type == "movie")
+                    {
+                    @movie.Title
+                    }
+                    else
+                    {
+                        @movie.name
+                    }</h5>
+                </div>
+            </div>
+
+            <div class="modal fade" id="movieModal-@movie.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content bg-dark">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                                @if (@movie.media_type == "movie")
+                                {
+                                    @movie.Title
+                                    <span>
+                                        (@movie.ReleaseDate.Year)
+                                    </span>
+                                }
+                                else if (@movie.media_type == "tv")
+                                {
+                                    @movie.name
+                                    <span>(@movie.First_air_date.Year)</span>
+                                }
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            @if (!string.IsNullOrEmpty(movie.backdrop_path))
+                            {
+                                <img class="card-img-top" src="https://image.tmdb.org/t/p/original/@movie.backdrop_path" alt="@if (@movie.media_type == "movie")
+                                    {
+                                        @movie.Title
+                                    }
+                                    else if (@movie.media_type == "tv")
+                                    {
+                                        @movie.name
+                                    }" />
+                            }
+                            else
+                            {
+                                <span>No Poster aviable</span>
+                            }
+
+                            <p class="modal-overview">@movie.Overview</p>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
