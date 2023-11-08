@@ -10,6 +10,9 @@ body {
 .card-text {
     font-size: 1.3vw;
 }
+.information{
+    font-size:0.9vw;
+}
 #multi-item-carousel .cast {
     object-fit: contain;
     border: none;
@@ -17,5 +20,8 @@ body {
 .cast{
     margin: 5px;
     border: none;
+}
+.overview{
+    text-align:justify;
 }
 

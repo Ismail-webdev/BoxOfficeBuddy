@@ -16,13 +16,13 @@
     {
         <div class="card bg-dark col-md-3 rounded" style="width: 16rem; padding: 10px; margin: 9px;" type="button" data-toggle="modal" data-target="#movieModal-@movie.Id">
             <div>
-                @if (movie.VoteAverage >= 7)
+                @if (movie.vote_average >= 7)
                 {
-                    <span class="badge badge-success vote-average text-center" style="position: absolute; top: 10px; right: 10px;">@movie.VoteAverage.ToString("0.0")⭐</span>
+                    <span class="badge badge-success vote-average text-center" style="position: absolute; top: 10px; right: 10px;">@movie.vote_average.ToString("0.0")⭐</span>
                 }
-                @if (movie.VoteAverage <= 7 && movie.VoteAverage >= 5)
+                @if (movie.vote_average <= 7 && movie.vote_average >= 5)
                 {
-                    <span class="badge badge-secondary vote-average" style="position: absolute; top: 10px; right: 10px;">@movie.VoteAverage.ToString("0.0")⭐</span>
+                    <span class="badge badge-secondary vote-average" style="position: absolute; top: 10px; right: 10px;">@movie.vote_average.ToString("0.0")⭐</span>
                 }
             </div>
 
@@ -104,32 +104,58 @@
                                     <span>No Poster available</span>
                                 }
                                 <br />
-                                @if (movie.Genres != null && movie.Genres.Any())
-                                {
-                                    <p>Genres:</p>
-                                    foreach (var genre in movie.Genres)
+                                <div class="information">
+                                    <h5>Related Information</h5>
+                                    @if (movie.Genres != null && movie.Genres.Any())
                                     {
-                                        <span class="overview">@genre.Name</span>
-                                        if (genre != movie.Genres.Last())
+                                        <span>Genres:</span>
+                                        foreach (var genre in movie.Genres)
                                         {
-                                            <span>,</span>
+                                            <span>@genre.Name</span>
+                                            if (genre != movie.Genres.Last())
+                                            {
+                                                <span>,</span>
+                                            }
                                         }
                                     }
-                                }
-                                <br/>
-                                <span>Runtime: @movie.runtime Minutes</span>
+                                    <br />
+                                    @if (movie.media_type == "movie")
+                                    {
+                                        <span>Runtime: @movie.runtime Minutes</span>
+                                        <br />
+                                        if (movie.Budget > 0)
+                                        {
+                                            <span>Budget: $@movie.Budget</span>
+                                        }
+                                        <br />
+                                        if (movie.revenue > 0)
+                                        {
+                                            <span>Revenue: $@movie.revenue</span>
+                                        }
+                                    }
+                                </div>
                             </div>
 
                             <div class="col-md-7">
                                 <p>
                                     @if (movie.media_type == "movie")
                                     {
-                                        <span>
-                                            @movie.tagline
-                                        </span>
+                                        <h6 class="text-center"><strong>@movie.Title</strong></h6>
                                     }
-                                </p>
+                else
+                {
+                                <h6 class="text-center"><strong>@movie.name</strong></h6>
+                }
+                                        @if (movie.media_type == "movie")
+                                        {
+                                            <span>
+                                                @movie.tagline
+                                            </span>
+                                        }
+                                    </p>
+                                <div class="overview">
                                 <p>@movie.Overview</p>
+                               </div>
                             </div>
                         </div>
                     </div>
@@ -209,7 +235,7 @@
                         }
                         else
                         {
-                            <img src="https://tse4.explicit.bing.net/th?id=OIP.DxV_HfLqa-LEu7uY6pJxaQHaG8&pid=Api&P=0&h=180" alt="not available" class="img-fluid justify-content-center" />
+                            <img src="https://2.bp.blogspot.com/-5PtnfLKrn-4/TVb-b5xycCI/AAAAAAAAAIc/YeYJu-QJGcI/s1600/unavailable.jpg" alt="not available" class="img-fluid justify-content-center" />
                         }
                     </div>
                     <div class="modal-footer">

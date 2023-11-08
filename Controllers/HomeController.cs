@@ -42,6 +42,7 @@ namespace BoxOffice.Controllers
                     current.Budget = moviedetails.Budget;
                     current.tagline = moviedetails.tagline;
                     current.runtime = moviedetails.runtime;
+                    current.revenue = moviedetails.revenue;
                 }
 
             }
@@ -51,19 +52,40 @@ namespace BoxOffice.Controllers
         public ActionResult Movies()
         {
             var discovermovies = apiServices.GetDiscover();
+            foreach(var movies in discovermovies)
+            {
+                var current = movies;
+                Parallel.Invoke(
+                () => { current.Cast = apiServices.GetMovieCast(current.Id); },
+                () => { current.Videos = apiServices.GetMovieTrailers(current.Id); }
+            );
+                var moviedetails = apiServices.GetMovieDetails(current.Id);
+                if (moviedetails != null)
+                {
+                    current.Budget = moviedetails.Budget;
+                    current.tagline = moviedetails.tagline;
+                    current.runtime = moviedetails.runtime;
+                    current.revenue = moviedetails.revenue;
+                }
+            }
             return View(discovermovies);
         }
         public ActionResult TvSeries()
         {
             var discoverTv = apiServices.GetDiscoverTV();
-            return View(discoverTv);
+            foreach (var tv in discoverTv)
+            {
+                var current = tv;
+                Parallel.Invoke(
+                () => { current.Cast = apiServices.GetTvShowCast(current.Id); },
+                () => { current.Videos = apiServices.GetTVTrailers(current.Id); }
+            );
+            }
+                return View(discoverTv);
         }
         public ActionResult Search()
         {
-           
-            ViewBag.Message = "Your application description page.";
-
-           return View();
+            return View();
         }
         [HttpPost]
         public async Task<ActionResult> Search(string searchTerm, string searchType)
@@ -86,7 +108,6 @@ namespace BoxOffice.Controllers
 
                 ViewBag.SearchResults = searchResults.Results;
                 ViewBag.SearchType = searchType;
-
                 return View("Search");
             }
         }

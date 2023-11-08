@@ -7,110 +7,121 @@
 <head>
     <link href="~/Content/CSS/index.css" rel="stylesheet" />
 </head>
-<h2 class="text-center" style="margin: 10px;">Discover</h2>
+
+<h2 class="text-center" style="margin: 10px;">Tv Series</h2>
+
 <div class="row justify-content-around">
     @foreach (var movie in Model)
     {
-        <div class="card bg-dark col-md-3 rounded" style="width: 16rem; padding:10px; margin: 9px;" type="button" data-toggle="modal" data-target="#movieModal-@movie.Id">
+        <div class="card bg-dark col-md-3 rounded" style="width: 16rem; padding: 10px; margin: 9px;" type="button" data-toggle="modal" data-target="#movieModal-@movie.Id">
             <div>
-                @if (movie.VoteAverage >= 7)
+                @if (movie.vote_average >= 7)
                 {
-                    <span class="badge badge-success vote-average text-center" style="position: absolute; top: 10px; right: 10px;">@movie.VoteAverage.ToString("0.0")⭐</span>
+                    <span class="badge badge-success vote-average text-center" style="position: absolute; top: 10px; right: 10px;">@movie.vote_average.ToString("0.0")⭐</span>
                 }
-                @if (movie.VoteAverage <= 7 && movie.VoteAverage >= 5)
+                @if (movie.vote_average <= 7 && movie.vote_average >= 5)
                 {
-                    <span class="badge badge-secondary vote-average" style="position: absolute; top: 10px; right: 10px;">@movie.VoteAverage.ToString("0.0")⭐</span>
+                    <span class="badge badge-secondary vote-average" style="position: absolute; top: 10px; right: 10px;">@movie.vote_average.ToString("0.0")⭐</span>
                 }
             </div>
 
             @if (!string.IsNullOrEmpty(movie.poster_path))
             {
-                <img class="card-img-top" src="https://image.tmdb.org/t/p/original/@movie.poster_path" alt="@if (@movie.media_type == "movie")
-                {
-                                       @movie.Title
-                }
-                else if (@movie.media_type == "tv")
-                {
-                                        @movie.name
-                }" />
+                <img class="card-img-top" src="https://image.tmdb.org/t/p/original/@movie.poster_path" alt="@if (movie.media_type == "tv")
+            {
+                @movie.name
+            }" />
             }
             else
             {
-                <span>No Poster aviable</span>
+                <span>No Poster available</span>
             }
+
             <div class="card-body">
                 <h3 class="card-text text-center">
                     @movie.name
                 </h3>
-                <div class="modal fade" id="movieModal-@movie.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content bg-dark">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">
-                                    @movie.name
-                                    <span>(@movie.First_air_date.Year)</span>
-                                </h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                @if (!string.IsNullOrEmpty(movie.backdrop_path))
+            </div>
+        </div>
+
+        <div class="modal fade" id="movieModal-@movie.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            @movie.name
+                            <span>
+                                (@movie.First_air_date.Year)
+                            </span>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-5">
+                                @if (!string.IsNullOrEmpty(movie.poster_path))
                                 {
-                                    <img class="card-img-top" src="https://image.tmdb.org/t/p/original/@movie.backdrop_path" alt="@if (@movie.media_type == "movie")
-                                    {
-                                        @movie.Title
-                                    }
-                                    else if (@movie.media_type == "tv")
-                                    {
-                                        @movie.name
-                                    }" />
+                                    <img src="https://image.tmdb.org/t/p/w500/@movie.poster_path" alt="@if (movie.media_type == "movie")
+                                {
+                                    @movie.name
+                                }" class="img-fluid" />
                                 }
                                 else
                                 {
-                                    <span>No Poster aviable</span>
+                                    <span>No Poster available</span>
                                 }
+                                <br />
+                            </div>
 
-                                <p class="modal-overview">@movie.Overview</p>
-                                @if (movie.media_type == "movie")
-                                {
-                                    <div id="multi-item-carousel" class="carousel slide" data-ride="carousel" data-mouse="true" data-interval="2000">
-                                        <!-- Wrapper for slides -->
-                                        <div class="carousel-inner">
-                                            @for (int i = 0; i < movie.Cast.Count; i += 3)
-                                            {
-                                                <div class="carousel-item @(i == 0 ? "active" : "")">
-                                                    <div class="row">
-                                                        @for (int j = i; j < Math.Min(i + 3, movie.Cast.Count); j++)
-                                                        {
-
-                                                            <div class="col-md-4 col-sm-4">
-                                                                <div class="card bg-dark cast">
-                                                                    <figure>
-                                                                        <img src="https://image.tmdb.org/t/p/original/@movie.Cast[j].ProfilePath"
-                                                                             alt="@movie.Cast[j].Name"
-                                                                             class="img-fluid image justify-content-center rounded" style="max-width: 100%; max-height: 200px;"
-                                                                             onerror=" this.onerror=null; this.src='@defaultImageUrl' ;">
-                                                                        <!-- Optional: Add a figcaption for the image -->
-                                                                        <figcaption class="text-center">@movie.Cast[j].Name</figcaption>
-                                                                    </figure>
-                                                                </div>
-                                                            </div>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                }
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <div class="col-md-7">
+                                <p>
+                                    <h6 class="text-center"><strong>@movie.name</strong></h6>
+                                    <span>
+                                        @movie.tagline
+                                    </span>
+                                </p>
+                                <div class="overview">
+                                    <p>@movie.Overview</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#trailerModal-@movie.Id">Watch Trailer</button>
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="trailerModal-@movie.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                                @movie.name
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </h5>
+                    </div>
+                    <div class="modal-body">
+                        @if (movie.Videos != null && movie.Videos.Any(v => v.Type == "Trailer"))
+                        {
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/@movie.Videos.First(v => v.Type == "Trailer").Key" allowfullscreen></iframe>
+                            </div>
+                        }
+                        else
+                        {
+                            <img src="https://2.bp.blogspot.com/-5PtnfLKrn-4/TVb-b5xycCI/AAAAAAAAAIc/YeYJu-QJGcI/s1600/unavailable.jpg" alt="not available" class="img-fluid justify-content-center" />
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     }
 </div>

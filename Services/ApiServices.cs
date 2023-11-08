@@ -38,7 +38,17 @@ namespace BoxOffice.Services
             var response = client.Execute<MovieResponse>(request);
             if (response.IsSuccessful)
             {
-                return response.Data.Results;
+                var discovermovies = response.Data.Results;
+                foreach (var discover in discovermovies)
+                {
+                    var movieDetails = GetMovieDetails(discover.Id);
+                    if (movieDetails != null)
+                    {
+                        discover.Genres = movieDetails.Genres;
+                        discover.tagline = movieDetails.tagline;
+                    }
+                }
+                return discovermovies;
             }
             return new List<BoxOffice.Models.Movie>();
         }
@@ -80,7 +90,7 @@ namespace BoxOffice.Services
         public List<BoxOffice.Models.TrendingMovie> GetTrendingMovies()
         {
             var client = new RestClient(BaseUrl);
-            var request = new RestRequest($"trending/all/week?api_key={_apikey}&adult=false&language=en-US&sort_by=popularity.desc", Method.GET);
+            var request = new RestRequest($"trending/all/day?api_key={_apikey}&adult=false&language=en-US&sort_by=popularity.desc", Method.GET);
             var response = client.Execute<MovieTrendingResponse>(request);
 
             if (response.IsSuccessful)
