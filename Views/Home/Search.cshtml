@@ -3,46 +3,68 @@
     ViewBag.Title = "Movie Search";
 }
 <head>
-    <link href="~/Content/CSS/index.css" rel="stylesheet" />
+    <style>
+        .nav-tabs {
+            text-decoration: none;
+        }
+
+        .nav-link {
+            color: #fff;
+        }
+    </style>
 </head>
 <h2>Movie Search</h2>
 
-@using (Html.BeginForm("Search", "Home", FormMethod.Post))
+@using (Html.BeginForm("Search", "Home", FormMethod.Post, new { @class = "my-4" }))
 {
-    <p>
-        <label>
-            @Html.RadioButton("searchType", "movie", true) Movie
-        </label>
-        <label>
-            @Html.RadioButton("searchType", "tv") TV Series
-        </label>
-    </p>
-    <p>
-        @Html.TextBox("searchTerm")
-        <input type="submit" value="Search" />
-    </p>
+    <div class="form-group row">
+        <div class="col-12 col-md-8">
+            @Html.TextBox("searchTerm", null, new { @class = "form-control", placeholder = "Enter your search term" })
+        </div>
+        <div class="col-12 col-md-4 mt-2 mt-md-0">
+            <button type="submit" class="btn btn-primary btn-block">Search</button>
+        </div>
+    </div>
+    <div class="form-group row">
+        <ul class="nav nav-tabs" id="searchTypeTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="movie-tab" data-toggle="tab" href="#movie" role="tab" aria-controls="movie" aria-selected="true">Movie</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="tv-tab" data-toggle="tab" href="#tv" role="tab" aria-controls="tv" aria-selected="false">TV Series</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="searchTypeTabsContent">
+            <div class="tab-pane fade show active" id="movie" role="tabpanel" aria-labelledby="movie-tab">
+                @Html.RadioButton("searchType", "movie", true, new { @class = "d-none", id = "movieRadio" })
+            </div>
+            <div class="tab-pane fade" id="tv" role="tabpanel" aria-labelledby="tv-tab">
+                @Html.RadioButton("searchType", "tv", false, new { @class = "d-none", id = "tvRadio" })
+            </div>
+        </div>
+    </div>
 }
 
 @if (ViewBag.SearchResults != null)
 {
-<div class="card-columns">
-    @foreach (var movie in ViewBag.SearchResults)
-    {
-        <div class="card bg-dark" style="width: 16rem; padding:10px; margin: 9px;" type="button" data-toggle="modal" data-target="#movieModal-@movie.Id">
-            <div>
-                @if (movie.vote_average >= 7)
-                {
-                    <span class="badge badge-success vote-average text-center" style="position: absolute; top: 10px; right: 10px;">@movie.vote_average.ToString("0.0")⭐</span>
-                }
-                @if (movie.vote_average <= 7 && movie.vote_average >= 5)
-                {
-                    <span class="badge badge-secondary vote-average" style="position: absolute; top: 10px; right: 10px;">@movie.vote_average.ToString("0.0")⭐</span>
-                }
-                @if (movie.vote_average < 5)
-                {
-                    <span class="badge badge-danger vote-average" style="position: absolute; top: 10px; right: 10px;">@movie.vote_average.ToString("0.0")⭐</span>
-                }
-            </div>
+    <div class="card-columns">
+        @foreach (var movie in ViewBag.SearchResults)
+        {
+            <div class="card bg-dark" style="width: 16rem; padding:10px; margin: 9px;" type="button" data-toggle="modal" data-target="#movieModal-@movie.Id">
+                <div>
+                    @if (movie.vote_average >= 7)
+                    {
+                        <span class="badge badge-success vote-average text-center" style="position: absolute; top: 10px; right: 10px;">@movie.vote_average.ToString("0.0")⭐</span>
+                    }
+                    @if (movie.vote_average <= 7 && movie.vote_average >= 5)
+                    {
+                        <span class="badge badge-secondary vote-average" style="position: absolute; top: 10px; right: 10px;">@movie.vote_average.ToString("0.0")⭐</span>
+                    }
+                    @if (movie.vote_average < 5)
+                    {
+                        <span class="badge badge-danger vote-average" style="position: absolute; top: 10px; right: 10px;">@movie.vote_average.ToString("0.0")⭐</span>
+                    }
+                </div>
                 @if (!string.IsNullOrEmpty(movie.poster_path))
                 {
                     <img class="card-img-top" src="https://image.tmdb.org/t/p/original/@movie.poster_path" alt="@if (@movie.media_type == "movie")
@@ -56,7 +78,16 @@
                 }
                 else
                 {
-                    <span>No Poster aviable</span>
+
+                    <img class="card-img-top" src="  https://movienewsletters.net/photos/000000h1.jpg" alt="@if (@movie.media_type == "movie")
+                {
+                                        @movie.Title
+                    }
+                else if (@movie.media_type == "tv")
+                {
+                                        @movie.name
+                }
+                " />
                 }
                 <div class="card-body">
                     <h5 class="card-title">
@@ -93,9 +124,9 @@
                                 <span>No Poster aviable</span>
                             }
 
-                        <p class="modal-overview">
-                            @movie.Overview
-                        </p>
+                            <p class="modal-overview">
+                                @movie.Overview
+                            </p>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
@@ -103,6 +134,6 @@
                     </div>
                 </div>
             </div>
-    }
-</div>
+        }
+    </div>
 }
